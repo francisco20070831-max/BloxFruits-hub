@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/francisco20070831-max/BloxFruits-hub/main/bloxfruits_admin_hubjj.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NeaPchX2/RedzHub-BloxFruits/main/RedzHub"))()
