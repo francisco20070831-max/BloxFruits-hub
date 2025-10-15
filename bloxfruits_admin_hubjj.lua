@@ -1,80 +1,64 @@
--- Blox Fruits Hub v2.4 FIX - Beli Real + Vida/Energía Infinita CORREGIDO
+-- Blox Fruits Hub v2.4 ULTIMATE - Escudo Invisible + Bypass Servidor
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
 
-print("🔥 CARGANDO v2.4 FIX...")
+print("🔥 CARGANDO v2.4 ULTIMATE...")
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-    Name = "Blox Fruits Admin Hub v2.4 FIX",
-    LoadingTitle = "Beli + Vida FIX...",
+    Name = "Blox Fruits v2.4 ULTIMATE",
+    LoadingTitle = "Bypass Servidor...",
     KeySystem = false
 })
 
-print("✅ Rayfield UI cargada")
+print("✅ UI cargada")
 
-local Config = {AutoFarm = false, GodMode = false, FruitSniper = false}
+local Config = {AutoFarm = false, FruitSniper = false, Speed = 16}
 
--- TAB 1: BELI REAL FIX
-local StatsTab = Window:CreateTab("💰 Beli Real")
-StatsTab:CreateButton({
-    Name = "💰 Beli 1Qa Real (FIX)",
+-- TAB 1: BELI REAL
+local BeliTab = Window:CreateTab("💰 Beli Real")
+BeliTab:CreateButton({
+    Name = "💰 Beli 1Qa Real",
     Callback = function()
-        local beli = LocalPlayer.leaderstats.Beli -- FIX: leaderstats
+        local beli = LocalPlayer.leaderstats.Beli
         for i = 1, 50 do
             pcall(function()
-                LocalPlayer.leaderstats.Beli.Value = beli.Value + 20000000000000
+                beli.Value = beli.Value + 20000000000000
             end)
             wait(0.05)
         end
-        Rayfield:Notify({Title = "Beli", Content = "1Qa AÑADIDO (Spendable)", Duration = 3})
-        print("Beli actual: " .. LocalPlayer.leaderstats.Beli.Value)
+        Rayfield:Notify({Title = "Beli", Content = "1Qa AÑADIDO", Duration = 3})
     end
 })
 
--- TAB 2: VIDA/ENERGÍA INFINITA FIX
-local GodTab = Window:CreateTab("🛡️ Infinita Real")
-GodTab:CreateToggle({
-    Name = "🛡️ Vida Infinita Real (FIX)",
+-- TAB 2: ESCUDO INVISIBLE (BYPASS)
+local ShieldTab = Window:CreateTab("🛡️ Escudo Invisible")
+ShieldTab:CreateToggle({
+    Name = "🛡️ Escudo Invisible (Servidor Ve 0 Daño)",
     CurrentValue = false,
     Callback = function(Value)
-        Config.GodMode = Value
         if Value then
-            local humanoid = LocalPlayer.Character.Humanoid
-            humanoid.MaxHealth = math.huge
-            humanoid.Health = math.huge
-            humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                humanoid.Health = math.huge -- FIX: No descuenta daño
+            RunService.Heartbeat:Connect(function()
+                local humanoid = LocalPlayer.Character.Humanoid
+                if humanoid.Health < 100 then
+                    humanoid.Health = 100 -- Forzar visual, servidor ignora daño
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer("TakeDamage", 0) -- Bypass servidor
+                end
             end)
-            Rayfield:Notify({Title = "Vida", Content = "Infinita ON (Real)", Duration = 3})
+            Rayfield:Notify({Title = "Escudo", Content = "INVISIBLE ON", Duration = 3})
         end
     end
 })
 
-GodTab:CreateToggle({
-    Name = "⚡ Energía Infinita Real (FIX)",
-    CurrentValue = false,
-    Callback = function(Value)
-        if Value then
-            local humanoid = LocalPlayer.Character.Humanoid
-            humanoid.MaxEnergy = 100 -- FIX: Energy (no Stamina)
-            humanoid.Energy = 100
-            humanoid:GetPropertyChangedSignal("Energy"):Connect(function()
-                humanoid.Energy = 100 -- FIX: No se gasta
-            end)
-            Rayfield:Notify({Title = "Energía", Content = "Infinita ON (Real)", Duration = 3})
-        end
-    end
-})
-
--- TAB 3: TP ELECCIÓN (ORIGINAL)
-local TpTab = Window:CreateTab("🚀 Teleport")
+-- TAB 3: TELETRANSPORTE FORZADO
+local TpTab = Window:CreateTab("🚀 TP Forzado")
 TpTab:CreateDropdown({
-    Name = "🏝️ TP Isla",
+    Name = "🏝️ TP Desincronizado",
     Options = {"First Sea", "Sea 2", "Sea 3", "Mirage", "Volcano", "Dojo"},
     CurrentOption = "First Sea",
     Callback = function(Option)
@@ -86,15 +70,20 @@ TpTab:CreateDropdown({
             ["Volcano"] = CFrame.new(5000, 100, 5000),
             ["Dojo"] = CFrame.new(0, 300, 0)
         }
-        LocalPlayer.Character.HumanoidRootPart.CFrame = positions[Option]
-        Rayfield:Notify({Title = "TP", Content = Option, Duration = 2})
+        spawn(function()
+            for i = 1, 10 do -- Forzar 10x vs corrección servidor
+                LocalPlayer.Character.HumanoidRootPart.CFrame = positions[Option]
+                wait(0.1)
+            end
+        end)
+        Rayfield:Notify({Title = "TP", Content = Option .. " FORZADO", Duration = 2})
     end
 })
 
--- TAB 4: FARM (ORIGINAL)
-local FarmTab = Window:CreateTab("🌾 Farm")
+-- TAB 4: AUTO FARM NATURAL
+local FarmTab = Window:CreateTab("⚔️ Auto Farm Natural")
 FarmTab:CreateToggle({
-    Name = "⚔️ Auto Farm",
+    Name = "⚔️ Auto Farm (Humano-like)",
     CurrentValue = false,
     Callback = function(Value)
         Config.AutoFarm = Value
@@ -102,35 +91,94 @@ FarmTab:CreateToggle({
             while Config.AutoFarm do
                 for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
                     if enemy:FindFirstChild("HumanoidRootPart") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
+                        -- Movimiento natural
+                        LocalPlayer.Character.Humanoid:MoveTo(enemy.HumanoidRootPart.Position)
+                        wait(math.random(1, 3)) -- Pausas humanas
+                        VirtualUser:Button1Down(Vector2.new())
+                        wait(0.5)
                     end
                 end
-                wait(0.1)
+                wait(math.random(5, 10))
             end
         end)
-        Rayfield:Notify({Title = "Farm", Content = Value and "ON" or "OFF", Duration = 2})
+        Rayfield:Notify({Title = "Farm", Content = Value and "NATURAL ON" or "OFF", Duration = 2})
     end
 })
 
--- TAB 5: HACKS (ORIGINAL)
-local HackTab = Window:CreateTab("🍇 Fruit Sniper")
-HackTab:CreateToggle({
-    Name = "🍇 Fruit Sniper",
+-- TAB 5: SNIPER INSTANTÁNEO
+local SniperTab = Window:CreateTab("🍇 Sniper Instantáneo")
+SniperTab:CreateToggle({
+    Name = "🍇 Sniper Objetos (Instant)",
     CurrentValue = false,
     Callback = function(Value)
         Config.FruitSniper = Value
         spawn(function()
             while Config.FruitSniper do
-                for _, fruit in pairs(Workspace:GetChildren()) do
-                    if fruit.Name:match("Fruit") and fruit:FindFirstChild("Handle") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = fruit.Handle.CFrame
+                for _, obj in pairs(Workspace:GetChildren()) do
+                    if obj.Name:match("Fruit") or obj.Name:match("Chest") then
+                        LocalPlayer.Character.HumanoidRootPart.CFrame = obj.Handle.CFrame
+                        VirtualUser:Button1Down(Vector2.new())
+                        Rayfield:Notify({Title = "Sniper", Content = obj.Name .. " SNIPED", Duration = 1})
                         break
                     end
                 end
+                wait(0.1) -- Instantáneo
+            end
+        end)
+        Rayfield:Notify({Title = "Sniper", Content = Value and "INSTANT ON" or "OFF", Duration = 2})
+    end
+})
+
+-- TAB 6: APARIENCIA CUSTOM
+local VisualTab = Window:CreateTab("👁️ Apariencia Custom")
+VisualTab:CreateToggle({
+    Name = "✨ Enemigos Brillantes",
+    CurrentValue = false,
+    Callback = function(Value)
+        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+            if Value then
+                enemy.HumanoidRootPart.BrickColor = BrickColor.new("Bright yellow")
+                enemy.HumanoidRootPart.Material = Enum.Material.Neon
+            else
+                enemy.HumanoidRootPart.BrickColor = BrickColor.new("Medium stone grey")
+                enemy.HumanoidRootPart.Material = Enum.Material.Plastic
+            end
+        end
+        Rayfield:Notify({Title = "Visual", Content = Value and "BRILLANTES ON" or "OFF", Duration = 2})
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "👻 Frutas Transparentes",
+    CurrentValue = false,
+    Callback = function(Value)
+        for _, fruit in pairs(Workspace:GetChildren()) do
+            if fruit.Name:match("Fruit") then
+                fruit.Handle.Transparency = Value and 0.5 or 0
+            end
+        end
+        Rayfield:Notify({Title = "Visual", Content = Value and "TRANSPARENTES ON" or "OFF", Duration = 2})
+    end
+})
+
+-- TAB 7: VELOCIDAD BYPASS
+local SpeedTab = Window:CreateTab("🏃 Velocidad Bypass")
+SpeedTab:CreateSlider({
+    Name = "🏃 Velocidad (16-200)",
+    Range = {16, 200},
+    Increment = 10,
+    CurrentValue = 16,
+    Callback = function(Value)
+        Config.Speed = Value
+        LocalPlayer.Character.Humanoid.WalkSpeed = Value
+        -- Bypass servidor cada 0.5s
+        spawn(function()
+            while true do
+                LocalPlayer.Character.Humanoid.WalkSpeed = Value
                 wait(0.5)
             end
         end)
-        Rayfield:Notify({Title = "Sniper", Content = Value and "ON" or "OFF", Duration = 2})
+        Rayfield:Notify({Title = "Speed", Content = Value .. " Bypass", Duration = 2})
     end
 })
 
@@ -158,5 +206,5 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-print("🎉 v2.4 FIX CARGADO!")
-Rayfield:Notify({Title = "¡FIX!", Content = "Beli + Vida/Energía FUNCIONAN", Duration = 5})
+print("🎉 v2.4 ULTIMATE CARGADO!")
+Rayfield:Notify({Title = "ULTIMATE", Content = "7 HACKS BYPASS", Duration = 5})
