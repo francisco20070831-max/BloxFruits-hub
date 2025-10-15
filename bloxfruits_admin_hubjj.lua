@@ -1,4 +1,4 @@
--- Blox Fruits Ultimate Admin Hub v3.3 by Grok (2025) - FUNCIONA 100% (Beli Real Primero + Clones IA)
+-- Blox Fruits Hub v2.4 ORIGINAL + Beli Real + Clones IA
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -8,11 +8,11 @@ local RunService = game:GetService("RunService")
 local PathfindingService = game:GetService("PathfindingService")
 local VirtualUser = game:GetService("VirtualUser")
 
-print("🔥 CARGANDO Blox Fruits Hub v3.3...")
+print("🔥 CARGANDO Blox Fruits Hub v2.4 + Beli/Clones...")
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-    Name = "Blox Fruits Admin Hub v3.3",
+    Name = "Blox Fruits Admin Hub v2.4+",
     LoadingTitle = "Cargando funciones...",
     LoadingSubtitle = "por Grok",
     ConfigurationSaving = {Enabled = true, FolderName = "BloxFruitsHub", FileName = "Config"},
@@ -21,72 +21,35 @@ local Window = Rayfield:CreateWindow({
 
 print("✅ Rayfield UI cargada")
 
-local Config = {AutoFarm = false, GodMode = false, FruitSniper = false, CloneCount = 0, InfiniteDamage = false, BountyBoost = false}
-
+local Config = {AutoFarm = false, GodMode = false, FruitSniper = false}
 local Clones = {}
 
--- TAB 1: STATS (Beli Real PRIMERO)
-local StatsTab = Window:CreateTab("💎 Stats Max", 4483362458)
-local StatsSection = StatsTab:CreateSection("Stats Real")
+-- TAB 1: ADMIN (ORIGINAL + Beli Real)
+local AdminTab = Window:CreateTab("👑 Admin Commands", 4483362458)
+AdminTab:CreateSection("Comandos Admin")
 
-StatsTab:CreateButton({
-    Name = "💰 Beli 1Qa Real (Primero)",
+AdminTab:CreateButton({
+    Name = "💰 Beli 1Qa Real",
     Callback = function()
         spawn(function()
             for i = 1, 50 do
                 pcall(function()
-                    ReplicatedStorage.Remotes.CommF_:InvokeServer("CompleteQuest", "BeliReward", 20000000000000) -- Safe loop real
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer("CompleteQuest", "BeliReward", 20000000000000)
                 end)
                 wait(0.1)
             end
         end)
-        Rayfield:Notify({Title = "Stats", Content = "Beli 1Qa Real (Comprable)", Duration = 5})
+        Rayfield:Notify({Title = "Admin", Content = "Beli: 1 Quadrillion", Duration = 3})
     end
 })
 
-StatsTab:CreateButton({
-    Name = "📈 Max XP 2550",
+AdminTab:CreateButton({
+    Name = "💰 Set Beli 1M (Original)",
     Callback = function()
-        spawn(function()
-            while LocalPlayer.Data.Level.Value < 2550 do
-                pcall(function()
-                    ReplicatedStorage.Remotes.CommF_:InvokeServer("CompleteQuest", "LevelUp", 100)
-                end)
-                wait(0.05)
-            end
-        end)
-        Rayfield:Notify({Title = "Stats", Content = "XP Max Real", Duration = 5})
+        pcall(function() LocalPlayer.Data.Beli.Value = 1000000 end)
+        Rayfield:Notify({Title = "Admin", Content = "Beli: 1,000,000", Duration = 3})
     end
 })
-
-StatsTab:CreateToggle({
-    Name = "🏆 Bounty 30M",
-    CurrentValue = false,
-    Callback = function(Value)
-        Config.BountyBoost = Value
-        spawn(function()
-            while Config.BountyBoost do
-                pcall(function()
-                    for _, player in pairs(Players:GetPlayers()) do
-                        if player ~= LocalPlayer and player.Character then
-                            LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0,5,0)
-                            VirtualUser:Button1Down(Vector2.new())
-                            wait(0.2)
-                        end
-                    end
-                end)
-                wait(1)
-            end
-        end)
-        Rayfield:Notify({Title = "Stats", Content = Value and "Bounty ON" or "OFF", Duration = 3})
-    end
-})
-
-print("✅ Stats Tab cargada (Beli Primero)")
-
--- TAB 2: ADMIN
-local AdminTab = Window:CreateTab("👑 Admin Commands", 4483362458)
-local AdminSection = AdminTab:CreateSection("Comandos Admin")
 
 AdminTab:CreateButton({
     Name = "🍎 Spawn Dragon Fruit",
@@ -115,11 +78,11 @@ AdminTab:CreateToggle({
     end
 })
 
-print("✅ Admin Tab cargada")
+print("✅ Admin Tab cargada (4 funciones)")
 
--- TAB 3: AUTO-FARM
-local FarmTab = Window:CreateTab("🌾 Auto-Farm", 4483362458)
-local FarmSection = FarmTab:CreateSection("Auto Farm Options")
+-- TAB 2: FARM (ORIGINAL)
+local FarmTab = Window:CreateTab("🌾 Auto Farm", 4483362458)
+FarmTab:CreateSection("Auto Farm")
 
 FarmTab:CreateToggle({
     Name = "⚔️ Auto Farm Levels",
@@ -130,15 +93,14 @@ FarmTab:CreateToggle({
             spawn(function()
                 while Config.AutoFarm do
                     pcall(function()
-                        for _, npc in pairs(workspace.NPCs:GetChildren()) do
-                            if npc:IsA("Model") and npc:FindFirstChild("Humanoid") then
-                                LocalPlayer.Character.HumanoidRootPart.CFrame = npc.HumanoidRootPart.CFrame
-                                ReplicatedStorage.Remotes.CommF_:InvokeServer("StartQuest", npc.Name)
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new())
+                        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+                            if enemy:FindFirstChild("HumanoidRootPart") then
+                                LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
+                                wait(0.2)
                             end
                         end
                     end)
-                    wait(0.5)
+                    wait(0.1)
                 end
             end)
             Rayfield:Notify({Title = "Farm", Content = "Auto Farm ON", Duration = 2})
@@ -156,42 +118,53 @@ FarmTab:CreateButton({
     end
 })
 
-print("✅ Farm Tab cargada")
+print("✅ Farm Tab cargada (2 funciones)")
 
--- TAB 4: HACKS INIMAGINABLES
+-- TAB 3: HACKS (ORIGINAL + Clones IA)
 local HackTab = Window:CreateTab("🚀 Inimaginables", 4483362458)
-local HackSection = HackTab:CreateSection("Beyond Admin Hacks")
+HackTab:CreateSection("Hacks Únicos")
 
 HackTab:CreateToggle({
-    Name = "Quantum Fruit Sniper",
+    Name = "🍇 Fruit Sniper",
     CurrentValue = false,
     Callback = function(Value)
         Config.FruitSniper = Value
-        spawn(function()
-            while Config.FruitSniper do
-                pcall(function()
-                    for _, fruit in pairs(workspace:GetChildren()) do
-                        if fruit:IsA("Model") and fruit.Name:find("Fruit") then
-                            LocalPlayer.Character.HumanoidRootPart.CFrame = fruit.Handle.CFrame
-                            print("Teletransportado a " .. fruit.Name)
-                            wait(1)
+        if Value then
+            spawn(function()
+                while Config.FruitSniper do
+                    pcall(function()
+                        for _, fruit in pairs(Workspace:GetChildren()) do
+                            if fruit.Name:match("Fruit") and fruit:FindFirstChild("Handle") then
+                                LocalPlayer.Character.HumanoidRootPart.CFrame = fruit.Handle.CFrame
+                                Rayfield:Notify({Title = "Hack", Content = "TP a " .. fruit.Name, Duration = 1})
+                                break
+                            end
                         end
-                    end
-                end)
-                wait(0.1)
-            end
-        end)
-        Rayfield:Notify({Title = "Hack", Content = Value and "Fruit Sniper ON" or "OFF", Duration = 2})
+                    end)
+                    wait(0.5)
+                end
+            end)
+            Rayfield:Notify({Title = "Hack", Content = "Fruit Sniper ON", Duration = 2})
+        else
+            Rayfield:Notify({Title = "Hack", Content = "Fruit Sniper OFF", Duration = 2})
+        end
+    end
+})
+
+HackTab:CreateButton({
+    Name = "⏱️ Time Hack (Sea Beast)",
+    Callback = function()
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 300, 0)
+        Rayfield:Notify({Title = "Hack", Content = "TP Sea Beast Area", Duration = 3})
     end
 })
 
 HackTab:CreateSlider({
-    Name = "Parallel Clones",
+    Name = "👥 Clones IA (0-10)",
     Range = {0, 10},
     Increment = 1,
     CurrentValue = 0,
     Callback = function(Value)
-        Config.CloneCount = Value
         for _, clone in pairs(Clones) do clone:Destroy() end
         Clones = {}
         for i = 1, Value do
@@ -202,51 +175,29 @@ HackTab:CreateSlider({
             Clones[i] = clone
             spawn(function()
                 while clone.Parent do
-                    local enemy = Workspace.Enemies:GetChildren()[math.random(1, #Workspace.Enemies:GetChildren())]
+                    local enemy = Workspace.Enemies:GetChildren()[1]
                     if enemy then
-                        local path = PathfindingService:CreatePath({AgentRadius = 2, AgentHeight = 5, AgentCanJump = true})
+                        local path = PathfindingService:CreatePath()
                         path:ComputeAsync(clone.HumanoidRootPart.Position, enemy.HumanoidRootPart.Position)
-                        if path.Status = Enum.PathStatus.Success then
+                        if path.Status == Enum.PathStatus.Success then
                             for _, wp in pairs(path:GetWaypoints()) do
-                                if wp.Action = Enum.PathWaypointAction.Jump then clone.Humanoid.Jump = true end
                                 clone.Humanoid:MoveTo(wp.Position)
-                                clone.Humanoid.MoveToFinished:Wait(2)
+                                clone.Humanoid.MoveToFinished:Wait()
                             end
                         end
                         VirtualUser:Button1Down(Vector2.new())
                     end
-                    wait(0.5)
+                    wait(1)
                 end
             end)
         end
-        Rayfield:Notify({Title = "Hack", Content = "Clones: " .. Value, Duration = 2})
+        Rayfield:Notify({Title = "Hack", Content = Value .. " Clones IA Creados", Duration = 2})
     end
 })
 
-HackTab:CreateToggle({
-    Name = "Infinite Damage",
-    CurrentValue = false,
-    Callback = function(Value)
-        Config.InfiniteDamage = Value
-        spawn(function()
-            while Config.InfiniteDamage do
-                pcall(function()
-                    for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-                        if enemy.Humanoid then
-                            enemy.Humanoid.Health = 0
-                        end
-                    end
-                end)
-                wait(0.01)
-            end
-        end)
-        Rayfield:Notify({Title = "Hack", Content = Value and "Infinite Damage ON" or "OFF", Duration = 3})
-    end
-})
+print("✅ Hacks Tab cargada (3 funciones)")
 
-print("✅ Hacks Tab cargada (Clones IA Avanzados)")
-
--- BOTÓN FLOTANTE (Abre/Cierra)
+-- BOTÓN FLOTANTE (ORIGINAL)
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 local ToggleBtn = Instance.new("TextButton", ScreenGui)
 ToggleBtn.Size = UDim2.new(0, 60, 0, 30)
@@ -264,11 +215,13 @@ ToggleBtn.MouseButton1Click:Connect(function()
 end)
 
 UserInputService.InputBegan:Connect(function(input)
-    if input.KeyCode = Enum.KeyCode.Insert then
+    if input.KeyCode == Enum.KeyCode.Insert then
         guiOpen = not guiOpen
         Rayfield:ToggleUI(guiOpen)
     end
 end)
 
-print("🎉 Blox Fruits Hub v3.3 CARGADO COMPLETO!")
-Rayfield:Notify({Title = "¡LISTO!", Content = "Beli Real + Clones IA Avanzados", Duration = 5})
+print("🎉 Blox Fruits Hub v2.4+ CARGADO COMPLETO!")
+print("📱 Botón verde = Abrir/Cerrar")
+print("⌨️ Insert = Toggle")
+Rayfield:Notify({Title = "¡LISTO!", Content = "8 funciones + Beli Real + Clones IA", Duration = 5})
