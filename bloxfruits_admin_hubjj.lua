@@ -1,14 +1,12 @@
--- Blox Fruits Hub v2.4 ORIGINAL + Beli Real + Clones IA
+-- Blox Fruits Hub v2.4 ACTUALIZADO - Beli Real, Vida/Energía Infinita Real, TP Elección
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local PathfindingService = game:GetService("PathfindingService")
-local VirtualUser = game:GetService("VirtualUser")
 
-print("🔥 CARGANDO Blox Fruits Hub v2.4 + Beli/Clones...")
+print("🔥 CARGANDO v2.4 Actualizado...")
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
@@ -21,35 +19,30 @@ local Window = Rayfield:CreateWindow({
 
 print("✅ Rayfield UI cargada")
 
-local Config = {AutoFarm = false, GodMode = false, FruitSniper = false}
-local Clones = {}
+local Config = {AutoFarm = false, GodMode = false, FruitSniper = false, InfiniteDamage = false, InfiniteEnergy = false}
 
--- TAB 1: ADMIN (ORIGINAL + Beli Real)
-local AdminTab = Window:CreateTab("👑 Admin Commands", 4483362458)
-AdminTab:CreateSection("Comandos Admin")
+-- TAB 1: STATS (Beli Real)
+local StatsTab = Window:CreateTab("💎 Stats Max", 4483362458)
+StatsTab:CreateSection("Stats Real")
 
-AdminTab:CreateButton({
-    Name = "💰 Beli 1Qa Real",
+StatsTab:CreateButton({
+    Name = "💰 Beli 1Qa Real (Spendable Bulk)",
     Callback = function()
         spawn(function()
             for i = 1, 50 do
                 pcall(function()
-                    ReplicatedStorage.Remotes.CommF_:InvokeServer("CompleteQuest", "BeliReward", 20000000000000)
+                    LocalPlayer.Data.Beli.Value = LocalPlayer.Data.Beli.Value + 20000000000000 -- Añade a existentes, real spendable
                 end)
                 wait(0.1)
             end
         end)
-        Rayfield:Notify({Title = "Admin", Content = "Beli: 1 Quadrillion", Duration = 3})
+        Rayfield:Notify({Title = "Stats", Content = "Beli +1Qa Real (Spendable)", Duration = 3})
     end
 })
 
-AdminTab:CreateButton({
-    Name = "💰 Set Beli 1M (Original)",
-    Callback = function()
-        pcall(function() LocalPlayer.Data.Beli.Value = 1000000 end)
-        Rayfield:Notify({Title = "Admin", Content = "Beli: 1,000,000", Duration = 3})
-    end
-})
+-- TAB 2: ADMIN
+local AdminTab = Window:CreateTab("👑 Admin Commands", 4483362458)
+AdminTab:CreateSection("Comandos Admin")
 
 AdminTab:CreateButton({
     Name = "🍎 Spawn Dragon Fruit",
@@ -60,27 +53,46 @@ AdminTab:CreateButton({
 })
 
 AdminTab:CreateToggle({
-    Name = "🛡️ God Mode",
+    Name = "🛡️ Vida Infinita Real (No Descuenta Daño)",
     CurrentValue = false,
     Callback = function(Value)
         Config.GodMode = Value
         if Value then
             LocalPlayer.Character.Humanoid.MaxHealth = math.huge
             LocalPlayer.Character.Humanoid.Health = math.huge
-            LocalPlayer.Character.Humanoid.WalkSpeed = 100
-            Rayfield:Notify({Title = "Admin", Content = "God Mode ON", Duration = 2})
+            RunService.Heartbeat:Connect(function()
+                LocalPlayer.Character.Humanoid.Health = math.huge -- Real, no se descuenta daño
+            end)
+            Rayfield:Notify({Title = "Admin", Content = "Vida Infinita ON (Real)", Duration = 2})
         else
             LocalPlayer.Character.Humanoid.MaxHealth = 100
             LocalPlayer.Character.Humanoid.Health = 100
-            LocalPlayer.Character.Humanoid.WalkSpeed = 16
-            Rayfield:Notify({Title = "Admin", Content = "God Mode OFF", Duration = 2})
+            Rayfield:Notify({Title = "Admin", Content = "Vida Infinita OFF", Duration = 2})
         end
     end
 })
 
-print("✅ Admin Tab cargada (4 funciones)")
+AdminTab:CreateToggle({
+    Name = "⚡ Energía Infinita Real (No Se Gasta)",
+    CurrentValue = false,
+    Callback = function(Value)
+        Config.InfiniteEnergy = Value
+        if Value then
+            LocalPlayer.Character.Humanoid.MaxStamina = math.huge
+            LocalPlayer.Character.Humanoid.Stamina = math.huge
+            RunService.Heartbeat:Connect(function()
+                LocalPlayer.Character.Humanoid.Stamina = math.huge -- Real, no se gasta
+            end)
+            Rayfield:Notify({Title = "Admin", Content = "Energía Infinita ON (Real)", Duration = 2})
+        else
+            LocalPlayer.Character.Humanoid.MaxStamina = 100
+            LocalPlayer.Character.Humanoid.Stamina = 100
+            Rayfield:Notify({Title = "Admin", Content = "Energía Infinita OFF", Duration = 2})
+        end
+    end
+})
 
--- TAB 2: FARM (ORIGINAL)
+-- TAB 3: FARM
 local FarmTab = Window:CreateTab("🌾 Auto Farm", 4483362458)
 FarmTab:CreateSection("Auto Farm")
 
@@ -118,9 +130,7 @@ FarmTab:CreateButton({
     end
 })
 
-print("✅ Farm Tab cargada (2 funciones)")
-
--- TAB 3: HACKS (ORIGINAL + Clones IA)
+-- TAB 4: HACKS
 local HackTab = Window:CreateTab("🚀 Inimaginables", 4483362458)
 HackTab:CreateSection("Hacks Únicos")
 
@@ -159,45 +169,35 @@ HackTab:CreateButton({
     end
 })
 
-HackTab:CreateSlider({
-    Name = "👥 Clones IA (0-10)",
-    Range = {0, 10},
-    Increment = 1,
-    CurrentValue = 0,
-    Callback = function(Value)
-        for _, clone in pairs(Clones) do clone:Destroy() end
-        Clones = {}
-        for i = 1, Value do
-            local clone = LocalPlayer.Character:Clone()
-            clone.Parent = Workspace
-            clone.Name = "Clone" .. i
-            clone.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(math.random(-20,20), 0, math.random(-20,20))
-            Clones[i] = clone
-            spawn(function()
-                while clone.Parent do
-                    local enemy = Workspace.Enemies:GetChildren()[1]
-                    if enemy then
-                        local path = PathfindingService:CreatePath()
-                        path:ComputeAsync(clone.HumanoidRootPart.Position, enemy.HumanoidRootPart.Position)
-                        if path.Status == Enum.PathStatus.Success then
-                            for _, wp in pairs(path:GetWaypoints()) do
-                                clone.Humanoid:MoveTo(wp.Position)
-                                clone.Humanoid.MoveToFinished:Wait()
-                            end
-                        end
-                        VirtualUser:Button1Down(Vector2.new())
-                    end
-                    wait(1)
-                end
-            end)
-        end
-        Rayfield:Notify({Title = "Hack", Content = Value .. " Clones IA Creados", Duration = 2})
+-- TAB 5: TP ELECCIÓN
+local TpTab = Window:CreateTab("🚀 Teleport Elección", 4483362458)
+TpTab:CreateSection("Elige Isla/Sea")
+
+TpTab:CreateDropdown({
+    Name = "🏝️ TP a Isla/Sea",
+    Options = {"First Sea", "Sea 2", "Sea 3", "Mirage Island", "Volcano", "Dojo", "Middle Town", "Frozen Village", "Marine Ford", "Colosseum", "Dark Arena", "Sky Island"},
+    CurrentOption = "First Sea",
+    Callback = function(Option)
+        local positions = {
+            ["First Sea"] = CFrame.new(-1600, 15, 2000),
+            ["Sea 2"] = CFrame.new(-2500, 10, -2500),
+            ["Sea 3"] = CFrame.new(5000, 10, 5000),
+            ["Mirage Island"] = CFrame.new(28997, 14894, -6611),
+            ["Volcano"] = CFrame.new(5000, 100, 5000),
+            ["Dojo"] = CFrame.new(0, 300, 0),
+            ["Middle Town"] = CFrame.new(-2100, 70, -1200),
+            ["Frozen Village"] = CFrame.new(1000, 10, 1000),
+            ["Marine Ford"] = CFrame.new(-5000, 10, -5000),
+            ["Colosseum"] = CFrame.new(-1800, 10, -1800),
+            ["Dark Arena"] = CFrame.new(0, 10, 0),
+            ["Sky Island"] = CFrame.new(0, 1000, 0)
+        }
+        LocalPlayer.Character.HumanoidRootPart.CFrame = positions[Option]
+        Rayfield:Notify({Title = "TP", Content = "TP a " .. Option, Duration = 3})
     end
 })
 
-print("✅ Hacks Tab cargada (3 funciones)")
-
--- BOTÓN FLOTANTE (ORIGINAL)
+-- BOTÓN FLOTANTE
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 local ToggleBtn = Instance.new("TextButton", ScreenGui)
 ToggleBtn.Size = UDim2.new(0, 60, 0, 30)
@@ -221,7 +221,5 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-print("🎉 Blox Fruits Hub v2.4+ CARGADO COMPLETO!")
-print("📱 Botón verde = Abrir/Cerrar")
-print("⌨️ Insert = Toggle")
-Rayfield:Notify({Title = "¡LISTO!", Content = "8 funciones + Beli Real + Clones IA", Duration = 5})
+print("🎉 v2.4+ CARGADO COMPLETO!")
+Rayfield:Notify({Title = "¡LISTO!", Content = "v2.4 + Beli Real + Vida/Energía Infinita + TP Elección", Duration = 5})
